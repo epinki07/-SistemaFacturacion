@@ -4,6 +4,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Local project notes and database configuration ###
+README.md
+src/main/resources/application.properties
+*.mv.db
+*.trace.db
+
 ### STS ###
 .apt_generated
 .classpath
