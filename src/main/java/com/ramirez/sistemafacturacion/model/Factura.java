@@ -48,6 +48,14 @@ public class Factura {
     @Column(name = "total", nullable = false, precision = 12, scale = 2)
     private BigDecimal total;
 
+    @PositiveOrZero(message = "El total de impuestos trasladados no puede ser negativo")
+    @Column(name = "total_impuestos_trasladados", precision = 12, scale = 2)
+    private BigDecimal totalImpuestosTrasladados;
+
+    @PositiveOrZero(message = "El total de impuestos retenidos no puede ser negativo")
+    @Column(name = "total_impuestos_retenidos", precision = 12, scale = 2)
+    private BigDecimal totalImpuestosRetenidos;
+
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid DetalleFactura> detalles = new ArrayList<>();
 
@@ -100,6 +108,22 @@ public class Factura {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public BigDecimal getTotalImpuestosTrasladados() {
+        return totalImpuestosTrasladados;
+    }
+
+    public void setTotalImpuestosTrasladados(BigDecimal totalImpuestosTrasladados) {
+        this.totalImpuestosTrasladados = totalImpuestosTrasladados;
+    }
+
+    public BigDecimal getTotalImpuestosRetenidos() {
+        return totalImpuestosRetenidos;
+    }
+
+    public void setTotalImpuestosRetenidos(BigDecimal totalImpuestosRetenidos) {
+        this.totalImpuestosRetenidos = totalImpuestosRetenidos;
     }
 
     public List<@Valid DetalleFactura> getDetalles() {
