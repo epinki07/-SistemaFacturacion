@@ -15,6 +15,7 @@ public class FacturaDomain {
     private BigDecimal total;
     private BigDecimal totalImpuestosTrasladados;
     private BigDecimal totalImpuestosRetenidos;
+    private Integer clienteId;
     private List<DetalleFacturaDomain> detalles = new ArrayList<>();
 
     public FacturaDomain() {
@@ -82,6 +83,14 @@ public class FacturaDomain {
 
     public void setTotalImpuestosRetenidos(BigDecimal totalImpuestosRetenidos) {
         this.totalImpuestosRetenidos = totalImpuestosRetenidos;
+    }
+
+    public Integer getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Integer clienteId) {
+        this.clienteId = clienteId;
     }
 
     public List<DetalleFacturaDomain> getDetalles() {

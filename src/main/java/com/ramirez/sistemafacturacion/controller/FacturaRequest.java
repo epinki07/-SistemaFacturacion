@@ -1,16 +1,6 @@
-package com.ramirez.sistemafacturacion.model;
+package com.ramirez.sistemafacturacion.controller;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,61 +11,45 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "facturas")
-public class Factura {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Schema(description = "Datos para crear una factura")
+public class FacturaRequest {
 
     @NotBlank(message = "El folio es obligatorio")
-    @Column(name = "folio", nullable = false, unique = true, length = 50)
+    @Schema(description = "Folio de la factura", example = "FAC-003")
     private String folio;
 
-    @NotBlank(message = "El cliente es obligatorio")
-    @Column(name = "cliente", nullable = false, length = 150)
+    @Schema(description = "ID del cliente registrado", example = "1")
+    private Integer clienteId;
+
+    @NotBlank(message = "El nombre del cliente es obligatorio")
+    @Schema(description = "Nombre del cliente mostrado en la factura", example = "Juan Perez")
     private String cliente;
 
     @NotNull(message = "La fecha es obligatoria")
-    @Column(name = "fecha", nullable = false)
+    @Schema(description = "Fecha de la factura", example = "2026-07-27")
     private LocalDate fecha;
 
     @NotNull(message = "El subtotal es obligatorio")
     @PositiveOrZero(message = "El subtotal no puede ser negativo")
-    @Column(name = "subtotal", nullable = false, precision = 12, scale = 2)
+    @Schema(description = "Subtotal de la factura", example = "1500.00")
     private BigDecimal subtotal;
 
     @NotNull(message = "El total es obligatorio")
     @PositiveOrZero(message = "El total no puede ser negativo")
-    @Column(name = "total", nullable = false, precision = 12, scale = 2)
+    @Schema(description = "Total de la factura", example = "1740.00")
     private BigDecimal total;
 
     @PositiveOrZero(message = "El total de impuestos trasladados no puede ser negativo")
-    @Column(name = "total_impuestos_trasladados", precision = 12, scale = 2)
+    @Schema(description = "Total de impuestos trasladados", example = "240.00")
     private BigDecimal totalImpuestosTrasladados;
 
     @PositiveOrZero(message = "El total de impuestos retenidos no puede ser negativo")
-    @Column(name = "total_impuestos_retenidos", precision = 12, scale = 2)
+    @Schema(description = "Total de impuestos retenidos", example = "0.00")
     private BigDecimal totalImpuestosRetenidos;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private Cliente clienteRegistro;
-
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid DetalleFactura> detalles = new ArrayList<>();
-
-    public Factura() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Valid
+    @Schema(description = "Detalles o conceptos de la factura")
+    private List<DetalleFacturaRequest> detalles = new ArrayList<>();
 
     public String getFolio() {
         return folio;
@@ -83,6 +57,14 @@ public class Factura {
 
     public void setFolio(String folio) {
         this.folio = folio;
+    }
+
+    public Integer getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Integer clienteId) {
+        this.clienteId = clienteId;
     }
 
     public String getCliente() {
@@ -133,32 +115,11 @@ public class Factura {
         this.totalImpuestosRetenidos = totalImpuestosRetenidos;
     }
 
-    public Cliente getClienteRegistro() {
-        return clienteRegistro;
-    }
-
-    public void setClienteRegistro(Cliente clienteRegistro) {
-        this.clienteRegistro = clienteRegistro;
-    }
-
-    public List<@Valid DetalleFactura> getDetalles() {
+    public List<DetalleFacturaRequest> getDetalles() {
         return detalles;
     }
 
-    public void setDetalles(List<@Valid DetalleFactura> detalles) {
-        this.detalles.clear();
-        if (detalles != null) {
-            detalles.forEach(this::addDetalle);
-        }
-    }
-
-    public void addDetalle(DetalleFactura detalle) {
-        detalles.add(detalle);
-        detalle.setFactura(this);
-    }
-
-    public void removeDetalle(DetalleFactura detalle) {
-        detalles.remove(detalle);
-        detalle.setFactura(null);
+    public void setDetalles(List<DetalleFacturaRequest> detalles) {
+        this.detalles = detalles;
     }
 }
