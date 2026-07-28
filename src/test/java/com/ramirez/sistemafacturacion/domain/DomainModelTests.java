@@ -15,6 +15,7 @@ class DomainModelTests {
     @Test
     void domainModelsDoNotUseJpaAnnotations() {
         List<Class<?>> domainTypes = List.of(
+                ClienteDomain.class,
                 FacturaDomain.class,
                 DetalleFacturaDomain.class,
                 ImpuestoDetalleFacturaDomain.class
