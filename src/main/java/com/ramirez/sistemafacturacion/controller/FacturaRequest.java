@@ -11,44 +11,44 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(description = "Datos para crear una factura")
+@Schema(description = "Data required to create an invoice")
 public class FacturaRequest {
 
     @NotBlank(message = "El folio es obligatorio")
-    @Schema(description = "Folio de la factura", example = "FAC-003")
+    @Schema(description = "Invoice folio", example = "FAC-003")
     private String folio;
 
-    @Schema(description = "ID del cliente registrado", example = "1")
+    @Schema(description = "Registered client ID", example = "1")
     private Integer clienteId;
 
     @NotBlank(message = "El nombre del cliente es obligatorio")
-    @Schema(description = "Nombre del cliente mostrado en la factura", example = "Juan Perez")
+    @Schema(description = "Client name shown on the invoice", example = "Juan Perez")
     private String cliente;
 
     @NotNull(message = "La fecha es obligatoria")
-    @Schema(description = "Fecha de la factura", example = "2026-07-27")
+    @Schema(description = "Invoice date", example = "2026-07-27")
     private LocalDate fecha;
 
     @NotNull(message = "El subtotal es obligatorio")
     @PositiveOrZero(message = "El subtotal no puede ser negativo")
-    @Schema(description = "Subtotal de la factura", example = "1500.00")
+    @Schema(description = "Invoice subtotal", example = "1500.00")
     private BigDecimal subtotal;
 
     @NotNull(message = "El total es obligatorio")
     @PositiveOrZero(message = "El total no puede ser negativo")
-    @Schema(description = "Total de la factura", example = "1740.00")
+    @Schema(description = "Invoice total", example = "1740.00")
     private BigDecimal total;
 
     @PositiveOrZero(message = "El total de impuestos trasladados no puede ser negativo")
-    @Schema(description = "Total de impuestos trasladados", example = "240.00")
+    @Schema(description = "Total transferred taxes", example = "240.00")
     private BigDecimal totalImpuestosTrasladados;
 
     @PositiveOrZero(message = "El total de impuestos retenidos no puede ser negativo")
-    @Schema(description = "Total de impuestos retenidos", example = "0.00")
+    @Schema(description = "Total withheld taxes", example = "0.00")
     private BigDecimal totalImpuestosRetenidos;
 
     @Valid
-    @Schema(description = "Detalles o conceptos de la factura")
+    @Schema(description = "Invoice details or line items")
     private List<DetalleFacturaRequest> detalles = new ArrayList<>();
 
     public String getFolio() {

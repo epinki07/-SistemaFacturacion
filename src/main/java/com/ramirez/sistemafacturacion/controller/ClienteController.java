@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Clientes", description = "Endpoints para consultar clientes registrados")
+@Tag(name = "Clients", description = "Endpoints to manage registered clients")
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -47,6 +47,22 @@ public class ClienteController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(clientes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get client by ID", description = "Get one registered client by ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Client found"),
+            @ApiResponse(responseCode = "400", description = "Wrong client ID"),
+            @ApiResponse(responseCode = "404", description = "Client not found"),
+            @ApiResponse(responseCode = "500", description = "Server error")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDomain> getById(
+            @Parameter(description = "Client ID", example = "1")
+            @PathVariable Integer id) {
+        return clienteService.getById(id)
+                .map(cliente -> new ResponseEntity<>(cliente, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Operation(summary = "Create client", description = "Add a client.")

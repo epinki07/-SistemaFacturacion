@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Facturas", description = "Endpoints para consultar facturas con sus detalles e impuestos")
+@Tag(name = "Invoices", description = "Endpoints to manage invoices with their details and taxes")
 @RestController
 @RequestMapping("/api/facturas")
 public class FacturaController {
@@ -50,6 +50,22 @@ public class FacturaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(facturas, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get invoices by client ID", description = "Get all invoices associated with a registered client.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Client invoices found"),
+            @ApiResponse(responseCode = "400", description = "Wrong client ID"),
+            @ApiResponse(responseCode = "404", description = "Client not found"),
+            @ApiResponse(responseCode = "500", description = "Server error")
+    })
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<FacturaDomain>> getByClienteId(
+            @Parameter(description = "Client ID", example = "1")
+            @PathVariable Integer clienteId) {
+        return facturaService.findByClienteId(clienteId)
+                .map(facturas -> new ResponseEntity<>(facturas, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Operation(summary = "Create invoice", description = "Add an invoice with details and taxes.")
@@ -81,8 +97,8 @@ public class FacturaController {
                                               "totalImpuestosRetenidos": 0.00,
                                               "total": 1740.00,
                                               "detalles": [
-                                                {
-                                                  "descripcion": "Servicio de consultoria",
+                                                    {
+                                                      "descripcion": "Consulting service",
                                                   "cantidad": 2,
                                                   "precioUnitario": 500.00,
                                                   "importe": 1000.00,
@@ -98,8 +114,8 @@ public class FacturaController {
                                                     }
                                                   ]
                                                 },
-                                                {
-                                                  "descripcion": "Licencia de software",
+                                                    {
+                                                      "descripcion": "Software license",
                                                   "cantidad": 1,
                                                   "precioUnitario": 500.00,
                                                   "importe": 500.00,

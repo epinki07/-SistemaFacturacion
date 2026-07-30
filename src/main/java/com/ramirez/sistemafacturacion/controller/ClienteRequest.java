@@ -5,26 +5,26 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-@Schema(description = "Datos para crear o actualizar un cliente")
+@Schema(description = "Data required to create or update a client")
 public class ClienteRequest {
 
     @NotBlank(message = "El nombre del cliente es obligatorio")
-    @Schema(description = "Nombre del cliente", example = "Carlos Hernandez")
+    @Schema(description = "Client name", example = "Carlos Hernandez")
     private String nombre;
 
     @NotBlank(message = "El RFC del cliente es obligatorio")
-    @Schema(description = "RFC del cliente", example = "HEGC900101AB1")
+    @Schema(description = "Client RFC", example = "HEGC900101AB1")
     private String rfc;
 
     @Email(message = "El correo electronico no tiene un formato valido")
-    @Schema(description = "Correo electronico del cliente", example = "carlos.hernandez@example.com")
+    @Schema(description = "Client email address", example = "carlos.hernandez@example.com")
     private String email;
 
-    @Schema(description = "Telefono del cliente", example = "9995556677")
+    @Schema(description = "Client phone number", example = "9995556677")
     private String telefono;
 
     @Pattern(regexp = "\\d{5}", message = "El codigo postal debe tener 5 digitos")
-    @Schema(description = "Codigo postal del cliente", example = "97000")
+    @Schema(description = "Client postal code", example = "97000")
     private String codigoPostal;
 
     public String getNombre() {

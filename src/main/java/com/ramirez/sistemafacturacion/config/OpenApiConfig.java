@@ -12,8 +12,8 @@ public class OpenApiConfig {
     public OpenAPI sistemaFacturacionOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Sistema de Facturacion API")
+                        .title("Billing System API")
                         .version("1.0")
-                        .description("API REST para consultar clientes, facturas, detalles e impuestos."));
+                        .description("REST API to manage clients, invoices, invoice details, and taxes."));
     }
 }

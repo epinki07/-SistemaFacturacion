@@ -2,6 +2,7 @@ package com.ramirez.sistemafacturacion.service;
 
 import com.ramirez.sistemafacturacion.domain.ImpuestoDetalleFacturaDomain;
 import com.ramirez.sistemafacturacion.mapper.ImpuestoDetalleFacturaMapper;
+import com.ramirez.sistemafacturacion.model.ImpuestoDetalleFactura;
 import com.ramirez.sistemafacturacion.repository.DetalleFacturaRepository;
 import com.ramirez.sistemafacturacion.repository.ImpuestoDetalleFacturaRepository;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,24 @@ public class ImpuestoDetalleFacturaService {
                 .map(impuestoDetalleFacturaMapper::toDomain)
                 .toList();
         return Optional.of(impuestos);
+    }
+
+    @Transactional
+    public Optional<ImpuestoDetalleFacturaDomain> update(Integer id, ImpuestoDetalleFacturaDomain impuestoDomain) {
+        return impuestoDetalleFacturaRepository.findById(id)
+                .map(impuesto -> updateFields(impuesto, impuestoDomain))
+                .map(impuestoDetalleFacturaRepository::save)
+                .map(impuestoDetalleFacturaMapper::toDomain);
+    }
+
+    private ImpuestoDetalleFactura updateFields(ImpuestoDetalleFactura impuesto,
+                                                ImpuestoDetalleFacturaDomain impuestoDomain) {
+        impuesto.setTipo(impuestoDomain.getTipo());
+        impuesto.setBase(impuestoDomain.getBase());
+        impuesto.setImpuesto(impuestoDomain.getImpuesto());
+        impuesto.setTipoFactor(impuestoDomain.getTipoFactor());
+        impuesto.setTasaOCuota(impuestoDomain.getTasaOCuota());
+        impuesto.setImporte(impuestoDomain.getImporte());
+        return impuesto;
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Detalles de factura", description = "Endpoints para consultar conceptos de factura")
+@Tag(name = "Invoice details", description = "Endpoints to query invoice line items")
 @RestController
 @RequestMapping("/api/detalles-factura")
 public class DetalleFacturaController {

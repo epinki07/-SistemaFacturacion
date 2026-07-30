@@ -12,35 +12,35 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(description = "Concepto o detalle de una factura")
+@Schema(description = "Invoice line item")
 public class DetalleFacturaRequest {
 
     @NotBlank(message = "La descripcion es obligatoria")
-    @Schema(description = "Descripcion del concepto", example = "Servicio de consultoria")
+    @Schema(description = "Line item description", example = "Consulting service")
     private String descripcion;
 
     @NotNull(message = "La cantidad es obligatoria")
     @Positive(message = "La cantidad debe ser mayor que cero")
-    @Schema(description = "Cantidad facturada", example = "2")
+    @Schema(description = "Invoiced quantity", example = "2")
     private Integer cantidad;
 
     @NotNull(message = "El precio unitario es obligatorio")
     @PositiveOrZero(message = "El precio unitario no puede ser negativo")
-    @Schema(description = "Precio unitario", example = "500.00")
+    @Schema(description = "Unit price", example = "500.00")
     private BigDecimal precioUnitario;
 
     @NotNull(message = "El importe es obligatorio")
     @PositiveOrZero(message = "El importe no puede ser negativo")
-    @Schema(description = "Importe del concepto", example = "1000.00")
+    @Schema(description = "Line item amount", example = "1000.00")
     private BigDecimal importe;
 
     @NotBlank(message = "El objeto de impuesto es obligatorio")
     @Pattern(regexp = "01|02|03", message = "El objeto de impuesto debe ser 01, 02 o 03")
-    @Schema(description = "Objeto de impuesto SAT", example = "02")
+    @Schema(description = "SAT tax object code", example = "02")
     private String objetoImpuesto;
 
     @Valid
-    @Schema(description = "Impuestos del concepto")
+    @Schema(description = "Line item taxes")
     private List<ImpuestoDetalleFacturaRequest> impuestos = new ArrayList<>();
 
     public String getDescripcion() {
