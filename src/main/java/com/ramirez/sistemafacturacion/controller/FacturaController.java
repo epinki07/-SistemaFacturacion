@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -158,6 +159,46 @@ public class FacturaController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(
+            summary = "Partially update an invoice tax",
+            description = "Update selected fields of a tax only if the tax belongs to the selected invoice. Invoice tax totals are recalculated after the update."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Tax updated and invoice totals recalculated"),
+            @ApiResponse(responseCode = "400", description = "Wrong tax data"),
+            @ApiResponse(responseCode = "404", description = "Invoice or tax not found"),
+            @ApiResponse(responseCode = "500", description = "Server error")
+    })
+    @PatchMapping("/{facturaId}/impuestos/{impuestoId}")
+    public ResponseEntity<FacturaDomain> patchImpuesto(
+            @Parameter(description = "Invoice ID", example = "1")
+            @PathVariable Integer facturaId,
+            @Parameter(description = "Tax ID", example = "1")
+            @PathVariable Integer impuestoId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Fields to update. Send only the fields that must change.",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ImpuestoDetalleFacturaPatchRequest.class),
+                            examples = @ExampleObject(
+                                    name = "Valid partial tax update",
+                                    summary = "Change IVA rate and amount",
+                                    value = """
+                                            {
+                                              "tasaOCuota": 0.080000,
+                                              "importe": 80.00
+                                            }
+                                            """
+                            )
+                    )
+            )
+            @Valid @RequestBody ImpuestoDetalleFacturaPatchRequest request) {
+        return facturaService.patchImpuesto(facturaId, impuestoId, toImpuestoPatchDomain(request))
+                .map(factura -> new ResponseEntity<>(factura, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     private FacturaDomain toFacturaDomain(FacturaRequest request) {
         FacturaDomain factura = new FacturaDomain();
         factura.setFolio(request.getFolio());
@@ -208,5 +249,16 @@ public class FacturaController {
             impuestos.add(impuesto);
         }
         return impuestos;
+    }
+
+    private ImpuestoDetalleFacturaDomain toImpuestoPatchDomain(ImpuestoDetalleFacturaPatchRequest request) {
+        ImpuestoDetalleFacturaDomain impuesto = new ImpuestoDetalleFacturaDomain();
+        impuesto.setTipo(request.getTipo());
+        impuesto.setBase(request.getBase());
+        impuesto.setImpuesto(request.getImpuesto());
+        impuesto.setTipoFactor(request.getTipoFactor());
+        impuesto.setTasaOCuota(request.getTasaOCuota());
+        impuesto.setImporte(request.getImporte());
+        return impuesto;
     }
 }
