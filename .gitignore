@@ -4,9 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Local project notes and database configuration ###
-README.md
-src/main/resources/application.properties
+### Local database files ###
 *.mv.db
 *.trace.db
 
